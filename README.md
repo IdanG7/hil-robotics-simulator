@@ -39,54 +39,59 @@ This project implements a **Hardware-in-the-Loop (HIL) robotics simulator** that
 
 ## System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              SIMULATION ENVIRONMENT (Python)                 │
-│   ┌──────────────┐         ┌──────────────────────┐        │
-│   │   MuJoCo     │◄───────►│  Control Middleware  │        │
-│   │   Physics    │         │  • Serial Manager    │        │
-│   │   Engine     │         │  • Protocol Handler  │        │
-│   └──────┬───────┘         │  • PID Controller    │        │
-│          │                  └──────────┬───────────┘        │
-│          │ Render                      │ USB-Serial         │
-│          ▼                             ▼                     │
-│   ┌──────────────┐         ┌──────────────────────┐        │
-│   │ Visualization│         │  115200 baud         │        │
-│   │ Dashboard    │         │  Binary Protocol     │        │
-│   └──────────────┘         └──────────┬───────────┘        │
-└─────────────────────────────────────────┼──────────────────┘
-                                          │
-                                          │ USB Cable
-                                          ▼
-┌─────────────────────────────────────────┼──────────────────┐
-│           EMBEDDED HARDWARE (C/C++)                │         │
-│                                         ▼          │         │
-│  ┌──────────────────────────────────────────────┐ │         │
-│  │       STM32 NUCLEO-F446RE (Cortex-M4)        │ │         │
-│  │  ┌───────────────┐     ┌─────────────────┐  │ │         │
-│  │  │ UART Handler  │◄───►│ Command Parser  │  │ │         │
-│  │  └───────────────┘     └────────┬────────┘  │ │         │
-│  │                                  │            │ │         │
-│  │  ┌───────────────┐     ┌────────▼────────┐  │ │         │
-│  │  │ Control Loop  │◄───►│ Sensor Fusion   │  │ │         │
-│  │  │ (PID @ 50Hz)  │     │ (Comp. Filter)  │  │ │         │
-│  │  └───────┬───────┘     └────────▲────────┘  │ │         │
-│  │          │ PWM                   │ I2C       │ │         │
-│  │          ▼                       ▼           │ │         │
-│  │  ┌────────────┐        ┌────────────────┐   │ │         │
-│  │  │ TIM2/TIM3  │        │ MPU6050 Driver │   │ │         │
-│  │  │ PWM Gen    │        │ (IMU Sensor)   │   │ │         │
-│  │  └─────┬──────┘        └────────────────┘   │ │         │
-│  └────────┼──────────────────────────────────┘ │ │         │
-│           │                                      │ │         │
-│           ▼                                      ▼ │         │
-│   ┌────────────────┐                 ┌─────────────┐       │
-│   │  SG90 Servos   │                 │  MPU6050    │       │
-│   │  (2x joints)   │                 │  IMU Sensor │       │
-│   └────────────────┘                 └─────────────┘       │
-│                                                              │
-│   Power: ELEGOO 5V Supply (Common Ground)                  │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph sim["SIMULATION ENVIRONMENT (Python)"]
+        mujoco["MuJoCo<br/>Physics Engine"]
+        middleware["Control Middleware<br/>• Serial Manager<br/>• Protocol Handler<br/>• Kinematics"]
+        viz["Visualization<br/>Dashboard"]
+        serial["USB-Serial<br/>115200 baud<br/>Binary Protocol"]
+
+        mujoco <--> middleware
+        mujoco --> viz
+        middleware --> serial
+    end
+
+    subgraph hw["EMBEDDED HARDWARE (C/C++)"]
+        subgraph stm32["STM32 NUCLEO-F446RE (Cortex-M4)"]
+            uart["UART Handler<br/>(DMA)"]
+            parser["Command Parser<br/>(CRC-8)"]
+            control["Control Loop<br/>(PID @ 50Hz)"]
+            fusion["Sensor Fusion<br/>(Comp. Filter)"]
+            pwm["TIM2/TIM3<br/>PWM Generator"]
+            imu_drv["MPU6050 Driver<br/>(I2C)"]
+
+            uart <--> parser
+            parser --> control
+            control <--> fusion
+            control --> pwm
+            fusion <--> imu_drv
+        end
+
+        servo1["Shoulder Servo<br/>(SG90)"]
+        servo2["Elbow Servo<br/>(SG90)"]
+        imu["MPU6050<br/>IMU Sensor"]
+        power["ELEGOO 5V<br/>Power Supply"]
+
+        pwm -->|PWM| servo1
+        pwm -->|PWM| servo2
+        imu_drv <-->|I2C| imu
+        power -.->|5V| servo1
+        power -.->|5V| servo2
+        power -.->|GND| stm32
+    end
+
+    serial <-->|USB Cable| uart
+
+    style mujoco fill:#e1f5ff
+    style middleware fill:#e1f5ff
+    style viz fill:#e1f5ff
+    style serial fill:#fff4e6
+    style stm32 fill:#ffe6e6
+    style servo1 fill:#e6ffe6
+    style servo2 fill:#e6ffe6
+    style imu fill:#e6ffe6
+    style power fill:#f0f0f0
 ```
 
 ---
