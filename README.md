@@ -39,7 +39,6 @@ This project implements a **Hardware-in-the-Loop (HIL) robotics simulator** that
 
 ## System Architecture
 
-<<<<<<< HEAD
 ```mermaid
 graph TB
     subgraph sim["SIMULATION ENVIRONMENT (Python)"]
@@ -93,56 +92,6 @@ graph TB
     style servo2 fill:#e6ffe6
     style imu fill:#e6ffe6
     style power fill:#f0f0f0
-=======
-```
-┌────────────────────────────────────────────────────────────┐
-│              SIMULATION ENVIRONMENT (Python)               │
-│   ┌──────────────┐         ┌──────────────────────┐        │
-│   │   MuJoCo     │◄───────►│  Control Middleware  │        │
-│   │   Physics    │         │  • Serial Manager    │        │
-│   │   Engine     │         │  • Protocol Handler  │        │
-│   └──────┬───────┘         │  • PID Controller    │        │
-│          │                  └──────────┬───────────┘       │
-│          │ Render                      │ USB-Serial        │
-│          ▼                             ▼                   │
-│   ┌──────────────┐         ┌──────────────────────┐        │
-│   │ Visualization│         │  115200 baud         │        │
-│   │ Dashboard    │         │  Binary Protocol     │        │
-│   └──────────────┘         └──────────┬───────────┘        │
-└─────────────────────────────────────────┼──────────────────┘
-                                          │
-                                          │ USB Cable
-                                          ▼
-┌─────────────────────────────────────────┼───────────────────┐
-│           EMBEDDED HARDWARE (C/C++)                │        │
-│                                         ▼          │        │
-│  ┌──────────────────────────────────────────────┐ │         │
-│  │       STM32 NUCLEO-F446RE (Cortex-M4)        │ │         │
-│  │  ┌───────────────┐     ┌─────────────────┐  │ │          │
-│  │  │ UART Handler  │◄───►│ Command Parser  │  │ │          │
-│  │  └───────────────┘     └────────┬────────┘  │ │          │
-│  │                                  │            │ │        │
-│  │  ┌───────────────┐     ┌────────▼────────┐  │ │          │
-│  │  │ Control Loop  │◄───►│ Sensor Fusion   │  │ │          │
-│  │  │ (PID @ 50Hz)  │     │ (Comp. Filter)  │  │ │          │
-│  │  └───────┬───────┘     └────────▲────────┘  │ │          │
-│  │          │ PWM                   │ I2C       │ │         │
-│  │          ▼                       ▼           │ │         │
-│  │  ┌────────────┐        ┌────────────────┐   │ │          │
-│  │  │ TIM2/TIM3  │        │ MPU6050 Driver │   │ │          │
-│  │  │ PWM Gen    │        │ (IMU Sensor)   │   │ │          │
-│  │  └─────┬──────┘        └────────────────┘   │ │          │
-│  └────────┼──────────────────────────────────┘ │ │          │
-│           │                                      │ │        │
-│           ▼                                      ▼ │        │
-│   ┌────────────────┐                 ┌─────────────┐        │
-│   │  SG90 Servos   │                 │  MPU6050    │        │
-│   │  (2x joints)   │                 │  IMU Sensor │        │
-│   └────────────────┘                 └─────────────┘        │
-│                                                             │
-│   Power: ELEGOO 5V Supply (Common Ground)                   │
-└─────────────────────────────────────────────────────────────┘
->>>>>>> fac47e5776d5d9b1e9c3ac7e9027c3cb02d1ecab
 ```
 
 ---
@@ -150,6 +99,7 @@ graph TB
 ## Technical Highlights
 
 ### Embedded Firmware (C/C++)
+
 - **Real-time control loop** at 50Hz with deterministic timing
 - **Binary communication protocol** with CRC-8 error detection
 - **PID position control** with anti-windup and velocity limiting
@@ -157,6 +107,7 @@ graph TB
 - **Hardware abstraction** using STM32 HAL with peripheral drivers (UART, TIM, I2C)
 
 ### Simulation & Middleware (Python)
+
 - **MuJoCo physics simulation** with accurate 2-DOF arm dynamics
 - **Bidirectional state synchronization** (sim ↔ hardware)
 - **Forward/inverse kinematics** for Cartesian control
@@ -164,6 +115,7 @@ graph TB
 - **Error recovery** with timeout handling and reconnection logic
 
 ### Control Systems
+
 - **PID controller** tuned for servo response characteristics
 - **Trajectory generation** for smooth multi-point motion
 - **Sensor validation** (servo position vs IMU orientation)
@@ -173,13 +125,13 @@ graph TB
 
 ## Hardware Components
 
-| Component | Specifications | Purpose |
-|-----------|----------------|---------|
-| STM32 NUCLEO-F446RE | ARM Cortex-M4 @ 180MHz, 512KB Flash, 128KB RAM | Main controller |
-| SG90 Micro Servos (2x) | 1.8kg-cm torque, 0-180° range, PWM control | Joint actuation |
-| MPU6050 IMU | 6-axis gyro/accel, I2C interface | Orientation feedback |
-| ELEGOO Power Module | 5V regulated output | Servo power supply |
-| USB Cable | USB-A to Mini-B | Programming + serial communication |
+| Component              | Specifications                                 | Purpose                            |
+| ---------------------- | ---------------------------------------------- | ---------------------------------- |
+| STM32 NUCLEO-F446RE    | ARM Cortex-M4 @ 180MHz, 512KB Flash, 128KB RAM | Main controller                    |
+| SG90 Micro Servos (2x) | 1.8kg-cm torque, 0-180° range, PWM control     | Joint actuation                    |
+| MPU6050 IMU            | 6-axis gyro/accel, I2C interface               | Orientation feedback               |
+| ELEGOO Power Module    | 5V regulated output                            | Servo power supply                 |
+| USB Cable              | USB-A to Mini-B                                | Programming + serial communication |
 
 **Total Cost**: ~$80 CAD (budget-friendly for portfolio project)
 
@@ -187,16 +139,16 @@ graph TB
 
 ## Software Stack
 
-| Layer | Technology | Purpose |
-|-------|------------|---------|
-| Physics Simulation | MuJoCo 3.0+ | Realistic arm dynamics, collision detection |
-| Middleware | Python 3.10+ | Communication, control algorithms |
-| Serial Communication | pySerial | USB-Serial interface |
-| Visualization | Matplotlib / PyQt5 | Real-time 3D rendering, telemetry plots |
-| Firmware | C/C++ with STM32 HAL | Real-time embedded control |
-| Build System | STM32CubeIDE, Make | Firmware compilation |
-| Testing | pytest (Python), Unity (C) | Automated unit/integration tests |
-| Version Control | Git / GitHub | Professional development workflow |
+| Layer                | Technology                 | Purpose                                     |
+| -------------------- | -------------------------- | ------------------------------------------- |
+| Physics Simulation   | MuJoCo 3.0+                | Realistic arm dynamics, collision detection |
+| Middleware           | Python 3.10+               | Communication, control algorithms           |
+| Serial Communication | pySerial                   | USB-Serial interface                        |
+| Visualization        | Matplotlib / PyQt5         | Real-time 3D rendering, telemetry plots     |
+| Firmware             | C/C++ with STM32 HAL       | Real-time embedded control                  |
+| Build System         | STM32CubeIDE, Make         | Firmware compilation                        |
+| Testing              | pytest (Python), Unity (C) | Automated unit/integration tests            |
+| Version Control      | Git / GitHub               | Professional development workflow           |
 
 ---
 
@@ -255,6 +207,7 @@ Robot/
 ### Prerequisites
 
 **Hardware**:
+
 - STM32 NUCLEO-F446RE development board
 - 2x SG90 servo motors
 - MPU6050 IMU breakout board
@@ -262,6 +215,7 @@ Robot/
 - USB-A to Mini-B cable
 
 **Software**:
+
 - **Windows + WSL2** or native Linux
 - **STM32CubeIDE** (for firmware development)
 - **Python 3.10+** with pip
@@ -306,6 +260,7 @@ make flash
 See `docs/SETUP.md` for detailed wiring instructions.
 
 **Quick Reference**:
+
 - Servos powered by 5V supply (NOT STM32 5V pin)
 - Common ground between power supply and STM32
 - Servo PWM signals: PA0 (shoulder), PA1 (elbow)
@@ -365,6 +320,7 @@ pytest tests/ -v
 ```
 
 **Test Coverage**:
+
 - Protocol encoding/decoding
 - CRC validation
 - Forward/inverse kinematics
@@ -375,6 +331,7 @@ pytest tests/ -v
 See `docs/TESTING.md` for detailed test procedures.
 
 **Key Tests**:
+
 1. Connectivity test (echo command)
 2. Servo response time (<50ms)
 3. Position accuracy (<5°)
@@ -385,44 +342,49 @@ See `docs/TESTING.md` for detailed test procedures.
 
 ## Performance Metrics
 
-| Metric | Target | Achieved | Status |
-|--------|--------|----------|--------|
-| Round-trip latency | <50ms | TBD | 🔄 In Progress |
-| Position accuracy | <5° | TBD | 🔄 In Progress |
-| Packet loss rate | <1% | TBD | 🔄 In Progress |
-| Control loop rate | 50Hz | 50Hz | ✅ Verified |
-| Serial bandwidth usage | <20% | 14% | ✅ Verified |
+| Metric                 | Target | Achieved | Status         |
+| ---------------------- | ------ | -------- | -------------- |
+| Round-trip latency     | <50ms  | TBD      | 🔄 In Progress |
+| Position accuracy      | <5°    | TBD      | 🔄 In Progress |
+| Packet loss rate       | <1%    | TBD      | 🔄 In Progress |
+| Control loop rate      | 50Hz   | 50Hz     | ✅ Verified    |
+| Serial bandwidth usage | <20%   | 14%      | ✅ Verified    |
 
 ---
 
 ## Roadmap
 
 ### Week 1 (Jan 13-19): Foundation ✅
+
 - [x] Design document complete
 - [x] Repository structure created
-- [x] MuJoCo arm model implemented
-- [x] Python protocol module with tests
-- [x] STM32 firmware skeleton
+- [ ] MuJoCo arm model implemented
+- [ ] Python protocol module with tests
+- [ ] STM32 firmware skeleton
 
 ### Week 2 (Jan 20-26): HIL Loop 🔄
+
 - [ ] UART communication working
 - [ ] Servo PWM control operational
 - [ ] Basic command/telemetry exchange
 - [ ] MPU6050 driver functional
 
 ### Week 3 (Jan 27-Feb 2): Control & Polish
+
 - [ ] PID controller tuned
 - [ ] Sensor fusion working
 - [ ] Visualization dashboard complete
 - [ ] Error handling robust
 
 ### Week 4 (Feb 3-9): Documentation & Demo
+
 - [ ] Professional README
 - [ ] Demo video produced
 - [ ] Code cleanup and comments
 - [ ] Portfolio presentation ready
 
 ### Stretch Goals
+
 - [ ] ROS2 integration (publish joint_states topic)
 - [ ] Web dashboard (React + Three.js)
 - [ ] 3rd DOF (wrist rotation)
@@ -438,6 +400,7 @@ See `docs/TESTING.md` for detailed test procedures.
 **Problem**: USB-Serial introduces variable latency (5-30ms).
 
 **Solution**:
+
 - Binary protocol with fixed packet size for deterministic timing
 - CRC-8 checksum for error detection
 - Non-blocking serial I/O with timeout handling
@@ -448,6 +411,7 @@ See `docs/TESTING.md` for detailed test procedures.
 **Problem**: SG90 servos exhibit jitter and backlash.
 
 **Solution**:
+
 - PID deadband (±1°) to prevent micro-oscillations
 - Low-pass filter on commanded angles (20Hz cutoff)
 - Accept limitations, document in README (practical for portfolio)
@@ -457,6 +421,7 @@ See `docs/TESTING.md` for detailed test procedures.
 **Problem**: MPU6050 gyro drifts over time (~5°/minute).
 
 **Solution**:
+
 - Complementary filter fuses gyro (short-term) + accel (long-term)
 - Use servo position as ground truth, IMU for validation only
 - On-demand recalibration command
@@ -501,6 +466,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Author
 
 **[Your Name]**
+
 - 3rd Year CS Student @ Toronto Metropolitan University
 - Junior Software Developer @ WDI Wise Device Inc
 - Targeting roles at NVIDIA, Boston Dynamics, Palantir
