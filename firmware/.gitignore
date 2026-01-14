@@ -1,0 +1,16 @@
+# Build outputs
+Debug/
+Release/
+Build/
+
+# IDE files
+.metadata/
+.settings/
+.cproject
+.project
+
+# Generated files
+Drivers/
+
+# Keep only custom source
+!Core/
