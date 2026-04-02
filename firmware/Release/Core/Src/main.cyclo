@@ -1,0 +1,11 @@
+../Core/Src/main.c:195:6:SystemClock_Config	3
+../Core/Src/main.c:563:6:Check_Watchdog	3
+../Core/Src/main.c:596:6:Send_Telemetry_Angles	1
+../Core/Src/main.c:579:6:Run_Control_Loop	2
+../Core/Src/main.c:611:6:Send_Telemetry_Full	3
+../Core/Src/main.c:665:6:Send_ACK	1
+../Core/Src/main.c:674:6:Send_Error_Telemetry	1
+../Core/Src/main.c:516:6:Handle_Command	6
+../Core/Src/main.c:483:6:Process_UART_Commands	8
+../Core/Src/main.c:106:5:main	15
+../Core/Src/main.c:688:6:Error_Handler	1

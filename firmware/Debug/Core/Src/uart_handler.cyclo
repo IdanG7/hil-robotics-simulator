@@ -1,0 +1,6 @@
+../Core/Src/uart_handler.c:4:6:UART_Init	1
+../Core/Src/uart_handler.c:13:6:UART_BytesAvailable	1
+../Core/Src/uart_handler.c:18:9:UART_ReadByte	1
+../Core/Src/uart_handler.c:24:6:UART_SendPacket	2
+../Core/Src/uart_handler.c:34:6:UART_RxCallback	1
+../Core/Src/uart_handler.c:38:6:UART_TxCallback	1

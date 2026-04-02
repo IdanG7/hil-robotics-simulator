@@ -1,0 +1,4 @@
+../Core/Src/servo_control.c:43:6:Servo_SetAngle	32	static
+../Core/Src/servo_control.c:21:6:Servo_Init	16	static
+../Core/Src/servo_control.c:33:6:Servo_SetPulseRange	0	static
+../Core/Src/servo_control.c:50:7:Servo_GetAngle	0	static

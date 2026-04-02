@@ -1,0 +1,4 @@
+../Core/Src/servo_control.c:43:6:Servo_SetAngle	4
+../Core/Src/servo_control.c:21:6:Servo_Init	1
+../Core/Src/servo_control.c:33:6:Servo_SetPulseRange	2
+../Core/Src/servo_control.c:50:7:Servo_GetAngle	1

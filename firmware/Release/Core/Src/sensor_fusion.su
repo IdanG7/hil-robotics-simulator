@@ -1,0 +1,5 @@
+../Core/Src/sensor_fusion.c:14:6:SensorFusion_Init	0	static
+../Core/Src/sensor_fusion.c:22:6:SensorFusion_Update	32	static
+../Core/Src/sensor_fusion.c:47:7:SensorFusion_GetRoll	0	static
+../Core/Src/sensor_fusion.c:51:7:SensorFusion_GetPitch	0	static
+../Core/Src/sensor_fusion.c:55:6:SensorFusion_Reset	0	static

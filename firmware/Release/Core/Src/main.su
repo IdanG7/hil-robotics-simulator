@@ -1,0 +1,11 @@
+../Core/Src/main.c:195:6:SystemClock_Config	88	static,ignoring_inline_asm
+../Core/Src/main.c:563:6:Check_Watchdog	16	static
+../Core/Src/main.c:596:6:Send_Telemetry_Angles	208	static
+../Core/Src/main.c:579:6:Run_Control_Loop	16	static
+../Core/Src/main.c:611:6:Send_Telemetry_Full	232	static
+../Core/Src/main.c:665:6:Send_ACK	208	static
+../Core/Src/main.c:674:6:Send_Error_Telemetry	208	static
+../Core/Src/main.c:516:6:Handle_Command	32	static
+../Core/Src/main.c:483:6:Process_UART_Commands	88	static
+../Core/Src/main.c:106:5:main	96	static,ignoring_inline_asm
+../Core/Src/main.c:688:6:Error_Handler	0	static,ignoring_inline_asm

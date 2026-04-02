@@ -1,0 +1,3 @@
+../Core/Src/protocol.c:4:9:Protocol_CRC8	8	static
+../Core/Src/protocol.c:19:6:Protocol_DecodePacket	16	static
+../Core/Src/protocol.c:44:10:Protocol_EncodePacket	16	static
